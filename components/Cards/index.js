@@ -1,10 +1,11 @@
 axios
 	.get("https://lambda-times-backend.herokuapp.com/articles")
 	.then(res => {
-		Object.values(res.data.articles).map(topic =>
-			Card(topic).map(card =>
-				document.querySelector(".cards-container").appendChild(card)
-			)
+		const nestedArr = Object.values(res.data.articles);
+		let flatArr = [].concat(...nestedArr);
+
+		Card(flatArr).map(card =>
+			document.querySelector(".cards-container").appendChild(card)
 		);
 	})
 	.catch(err => console.log(err));
