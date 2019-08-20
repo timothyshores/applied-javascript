@@ -1,44 +1,33 @@
 axios
 	.get("https://lambda-times-backend.herokuapp.com/articles")
-	.then(res => {
-		const nestedArr = Object.values(res.data.articles);
-		let flatArr = [].concat(...nestedArr);
-
-		Card(flatArr).map(card =>
-			document.querySelector(".cards-container").appendChild(card)
-		);
-	})
+	.then(res =>
+		Object.values(res.data.articles)
+			.flat()
+			.map(card => Card(card))
+	)
 	.catch(err => console.log(err));
 
-const Card = articles => {
-	const cards = articles.map(article => {
-		const card = document.createElement("div");
-		card.classList.add("card");
+const Card = article => {
+	const card = document.createElement("div");
+	const headline = document.createElement("div");
+	const author = document.createElement("div");
+	const imgContainer = document.createElement("div");
+	const img = document.createElement("img");
+	const span = document.createElement("span");
 
-		const headline = document.createElement("div");
-		headline.classList.add("headline");
-		headline.textContent = article.headline;
+	card.classList.add("card");
+	headline.classList.add("headline");
+	headline.textContent = article.headline;
+	author.classList.add("author");
+	imgContainer.classList.add("img-container");
+	img.src = article.authorPhoto;
+	span.textContent = article.authorName;
 
-		const author = document.createElement("div");
-		author.classList.add("author");
+	card.appendChild(headline);
+	card.appendChild(author);
+	author.appendChild(imgContainer);
+	imgContainer.appendChild(img);
+	author.appendChild(span);
 
-		const imgContainer = document.createElement("div");
-		imgContainer.classList.add("img-container");
-
-		const img = document.createElement("img");
-		img.src = article.authorPhoto;
-
-		const span = document.createElement("span");
-		span.textContent = article.authorName;
-
-		card.appendChild(headline);
-		card.appendChild(author);
-		author.appendChild(imgContainer);
-		imgContainer.appendChild(img);
-		author.appendChild(span);
-
-		return card;
-	});
-
-	return cards;
+	document.querySelector(".cards-container").appendChild(card);
 };
